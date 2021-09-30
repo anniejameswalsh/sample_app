@@ -1,10 +1,14 @@
 <% provide(:title, 'Edit User') %>
+<head>
+  <script src="https://js.stripe.com/v3/"></script>
+  <script src="./script.js" defer></script>
+</head>
 <h1>Update your profile</h1>
 
 <div class="row">
   <div class="col-md-6 col-md-offset-3">
     <%= form_with(model: @user, local: true) do |f| %>
-      <%= render 'shared/error_messages', object: f.object %> %>
+      <%= render 'shared/error_messages', object: f.object %>
 
       <%= f.label :name %>
       <%= f.text_field :name, class: 'form-control' %>
@@ -20,6 +24,14 @@
 
       <%= f.submit "Save changes", class: "btn btn-primary" %>
     <% end %>
+
+    <form action="/create-checkout-session" method="POST">
+      <!-- Note: If using PHP set the action to /create-checkout-session.php -->
+      <input type=”hidden” name=”stripeToken” />
+
+      <input type="hidden" name="priceId" value="price_G0FvDp6vZvdwRZ" />
+      <button type="submit">Checkout</button>
+    </form>
 
     <div class="gravatar_edit">
       <%= gravatar_for @user %>
