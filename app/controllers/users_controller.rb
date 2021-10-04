@@ -1,8 +1,10 @@
 class UsersController < ApplicationController
   
-  before_action :logged_in_user, only: [:index, :edit, :update, :destroy]
+  before_action :logged_in_user, only: [:index, :edit, :update, :destroy, :subscribe]
   before_action :correct_user,   only: [:edit, :update]
   before_action :admin_user,     only: :destroy
+
+
 
   def index
     @users = User.paginate(page: params[:page])
@@ -45,8 +47,22 @@ class UsersController < ApplicationController
   end
 
   def subscribe
+    Stripe.api_key = 'sk_test_51Jf4GEFFrya4Rc8JJYaIJX1z554ToSyIu1DWSE50jX6JaWyohBIYJTfuzpyYX4PrtbMVDiJ4iQSU3QxvfxJ9hJzH00sZW9uM0i'
+
+    intent = Stripe::PaymentIntent.create({
+      amount: 1099,
+      currency: 'usd',
+      # Verify your integration in this guide by including this parameter
+      metadata: {integration_check: 'accept_a_payment'},
+    })
+    if @user.subscribe
+      flash[:success] = "You've been subscribed!"
+      redirect_to @user
+    else
+      render 'edit'
+    end
   end
-  
+
 
   def destroy
     User.find(params[:id]).destroy
