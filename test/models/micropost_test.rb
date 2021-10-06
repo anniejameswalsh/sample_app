@@ -28,7 +28,7 @@ class MicropostTest < ActiveSupport::TestCase
   end
 
   test "order should be most recent first" do
-    assert_equal Micropost.first, microposts(:most_recent)
+    assert_equal microposts(:most_recent), Micropost.first
   end
 
 end

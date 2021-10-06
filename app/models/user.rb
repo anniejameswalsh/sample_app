@@ -1,6 +1,7 @@
 class User < ApplicationRecord
 	has_many :microposts, dependent: :destroy
 	attr_accessor :remember_token, :activation_token, :reset_token
+
 	before_save   :downcase_email
 	before_create :create_activation_digest
 
@@ -30,7 +31,7 @@ class User < ApplicationRecord
 	end
 
 	def session_token
-    remember_digest || remember
+    	remember_digest || remember
   	end
 
 	def authenticated?(attribute, token)
@@ -46,7 +47,7 @@ class User < ApplicationRecord
 	# activates an account
 	def activate
 		update_attribute(:activated,    true)
-  	update_attribute(:activated_at, Time.zone.now)
+  		update_attribute(:activated_at, Time.zone.now)
   	end
 
 	def send_activation_email
