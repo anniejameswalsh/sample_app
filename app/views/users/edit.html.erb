@@ -32,20 +32,17 @@
     <br>
 
     <h3>Enter info to subscribe: ($10/month) </h3>
-    
-    <form id="payment-form">
-      <div id="card-element"><!--Stripe.js injects the Card Element--></div>
 
-      <button id="submit">
-        <div class="spinner hidden" id="spinner"></div>
-        <span id="button-text">Pay now</span>
-      </button>
+    <form id="payment-form" data-secret="<%= @intent.client_secret %>">
+      <input type="text" id="email" placeholder="Email address" />
+      <div id="card-element">
+        <!-- Elements will create input elements here -->
+      </div>
 
-      <p id="card-error" role="alert"></p>
-      <p class="result-message hidden">
-        Payment succeeded, see the result in your
-        <a href="" target="_blank">Stripe dashboard.</a> Refresh the page to pay again.
-      </p>
+      <!-- We'll put the error messages in this element -->
+      <div id="card-errors" role="alert"></div>
+
+      <button id="submit">Submit Payment</button>
     </form>
 
     <br>
@@ -62,3 +59,51 @@
     </div>
   </div>
 </div>
+
+<script type="text/javascript">
+  var form = $("#payment-form")[0]
+
+  // A reference to Stripe.js initialized with your real test publishable API key.
+  var stripe = Stripe('pk_test_51Jf4GEFFrya4Rc8JUuxAqZKFlYiUvsB9UYkbVYNdzuwP6SFKBMTtUOzBO5QttZBlmazVCyU6MRTkdJQjTdLdZ0sg00usxEQbZq');
+  var elements = stripe.elements();
+  
+  var style = {
+    base: {
+      color: "#32325d",
+    }
+  };
+
+  var card = elements.create("card", { style: style });
+  card.mount("#card-element");
+
+  card.on("change", function (event) {
+      // Disable the Pay button if there are no card details in the Element
+      document.querySelector("button").disabled = event.empty;
+      document.querySelector("#card-error").textContent = event.error ? event.error.message : "";
+    });
+
+  form.addEventListener('submit', function(ev) {
+    ev.preventDefault();
+
+    var clientSecret = $(form).data("secret")
+     stripe
+      .confirmCardPayment(clientSecret, {
+        receipt_email: document.getElementById('email').value,
+        payment_method: {
+          card: card
+        }
+      })
+      .then(function(result) {
+        if (result.error) {
+          // Show error to your customer
+          alert(result.error.message);
+        } else {
+          // The payment succeeded!
+          alert(result.paymentIntent.id);
+          
+        }
+      });
+  });
+
+
+</script>

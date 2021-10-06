@@ -17,11 +17,11 @@ class UsersController < ApplicationController
   end
 
 
-  def new
+  def new # get
     @user = User.new
   end
 
-  def create
+  def create # post
     @user = User.new(user_params)
     if @user.save
       @user.send_activation_email
@@ -33,11 +33,18 @@ class UsersController < ApplicationController
     end
   end
 
-  def edit
+  def edit # get
+    ::Stripe.api_key = 'sk_test_51Jf4GEFFrya4Rc8JJYaIJX1z554ToSyIu1DWSE50jX6JaWyohBIYJTfuzpyYX4PrtbMVDiJ4iQSU3QxvfxJ9hJzH00sZW9uM0i'
 
+    @intent = Stripe::PaymentIntent.create({
+      amount: 1000,
+      currency: 'usd',
+      # Verify your integration in this guide by including this parameter
+      metadata: {integration_check: 'accept_a_payment'},
+    })
   end
 
-  def update
+  def update # patch
     if @user.update(user_params)
       flash[:success] = "Profile updated"
       redirect_to @user
@@ -46,15 +53,8 @@ class UsersController < ApplicationController
     end
   end
 
-  def subscribe
-    Stripe.api_key = 'sk_test_51Jf4GEFFrya4Rc8JJYaIJX1z554ToSyIu1DWSE50jX6JaWyohBIYJTfuzpyYX4PrtbMVDiJ4iQSU3QxvfxJ9hJzH00sZW9uM0i'
 
-    intent = Stripe::PaymentIntent.create({
-      amount: 1099,
-      currency: 'usd',
-      # Verify your integration in this guide by including this parameter
-      metadata: {integration_check: 'accept_a_payment'},
-    })
+  def subscribe 
     if @user.subscribe
       flash[:success] = "You've been subscribed!"
       redirect_to @user
