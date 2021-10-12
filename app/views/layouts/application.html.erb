@@ -8,7 +8,12 @@
 
     <%= stylesheet_link_tag 'application', media: 'all',
                                            'data-turbolinks-track': 'reload' %>
+
+    <script src="https://js.stripe.com/v3/"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?version=3.52.1&features=fetch"></script>
+
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+    
     <%= render 'layouts/shim' %>
   </head>
   <body>
