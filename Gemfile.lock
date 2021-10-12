@@ -309,6 +309,7 @@ DEPENDENCIES
   spring (= 2.1.1)
   sqlite3 (= 1.4.2)
   stripe
+
   turbolinks (= 5.2.1)
   web-console (= 4.1.0)
   webdrivers (= 4.6.0)

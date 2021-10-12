@@ -1,5 +1,9 @@
 <% provide(:title, 'Edit User') %>
 
+<head>
+  <script src="https://js.stripe.com/v3/"></script>
+  <script src="./script.js" defer></script>
+</head>
 
 <h1>Update your profile</h1>
 
@@ -22,6 +26,7 @@
 
       <%= f.submit "Save changes", class: "btn btn-primary" %>
     <% end %>
+
 
     <br>
     <br>
@@ -52,6 +57,7 @@
     <br>
     <br>
     <br>
+
 
     <div class="gravatar_edit">
       <%= gravatar_for @user %>
